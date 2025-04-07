@@ -1,0 +1,39 @@
+//
+// Created by matei on 07-Apr-25.
+//
+
+#ifndef MEDIAITEMREPO_H
+#define MEDIAITEMREPO_H
+
+
+#include "../domain/MediaItem.h"
+#include <vector>
+#include <fstream>
+
+class MediaItemRepo {
+protected:
+    std::vector<MediaItem*> items;
+public:
+    void add(MediaItem*);
+};
+
+class FileRepo : public MediaItemRepo {
+private:
+    std::string file_path;
+public:
+    FileRepo(std::string file_path) : file_path(file_path) {};
+    bool save() {
+        std::ofstream of(file_path);
+        if (!of.is_open()) {
+            return false;
+        }
+        of << "type, title, duration, url, artist, director, numberOfActors";
+        for (MediaItem* i : items) {
+            of << *i << '\n';
+        }
+    }
+};
+
+
+
+#endif //MEDIAITEMREPO_H
