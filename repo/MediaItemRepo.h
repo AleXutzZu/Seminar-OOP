@@ -15,6 +15,8 @@ protected:
     std::vector<MediaItem*> items;
 public:
     void add(MediaItem*);
+
+    virtual ~MediaItemRepo() = default;
 };
 
 class FileRepo : public MediaItemRepo {
