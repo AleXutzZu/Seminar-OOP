@@ -20,6 +20,11 @@ public:
 class FileRepo : public MediaItemRepo {
 private:
     std::string file_path;
+
+    static std::vector<std::string> tokenize(std::string line);
+
+    static unsigned int computeDuration(const std::string &str);
+
 public:
     FileRepo(std::string file_path) : file_path(file_path) {};
     bool save() {
@@ -31,7 +36,10 @@ public:
         for (MediaItem* i : items) {
             of << *i << '\n';
         }
+        return true;
     }
+
+    bool load();
 };
 
 
