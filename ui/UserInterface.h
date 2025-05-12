@@ -14,14 +14,14 @@ private:
     MediaItemService &service;
 
 public:
-    UserInterface(MediaItemService &srv) : service(srv) {}
+    UserInterface(MediaItemService &srv);
 
     template<typename T>
-    T readInput(std::string input);
+    T parseInput(const std::string &input);
 };
 
 template<typename T>
-T UserInterface::readInput(std::string input) {
+T UserInterface::parseInput(const std::string &input) {
     T result;
     while (true) {
         std::cout << input << '\n';

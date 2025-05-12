@@ -3,3 +3,5 @@
 //
 
 #include "UserInterface.h"
+
+UserInterface::UserInterface(MediaItemService &srv) : service(srv) {}
