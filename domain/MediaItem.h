@@ -22,6 +22,12 @@ public:
         out<<item.toString();
         return out;
     }
+
+    const std::string &getTitle() const;
+
+    int getDuration() const;
+
+    const std::string &getUrl() const;
 };
 
 class Song : public MediaItem {
