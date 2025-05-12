@@ -22,13 +22,20 @@ MediaItemRepo::~MediaItemRepo() {
     }
 }
 
-void MediaItemRepo::remove(MediaItem *item) {
-    auto iterator = std::find_if(items.begin(), items.end(), [item](MediaItem *value) -> bool {
-        return value->getTitle() == item->getTitle();
+MediaItem* MediaItemRepo::remove(std::string title) {
+    auto iterator = std::find_if(items.begin(), items.end(), [title](MediaItem *value) -> bool {
+        return value->getTitle() == title;
     });
 
-    if (iterator == items.end()) throw std::invalid_argument("MediaItem not found: " + item->getTitle());
+    if (iterator == items.end()) throw std::invalid_argument("MediaItem not found: " + title);
+
+    MediaItem *ptr = *iterator;
     items.erase(iterator);
+    return ptr;
+}
+
+const std::vector<MediaItem *> &MediaItemRepo::getItems() const {
+    return items;
 }
 
 bool FileRepo::load() {
