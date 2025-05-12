@@ -5,8 +5,13 @@
 #include "MediaItemRepo.h"
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 void MediaItemRepo::add(MediaItem *item) {
+    auto iterator = std::find_if(items.begin(), items.end(), [item](MediaItem *value) -> bool {
+        return value->getTitle() == item->getTitle();
+    });
+    if (iterator != items.end()) throw std::invalid_argument("MediaItem already exists: " + item->getTitle());
     items.push_back(item);
 }
 
@@ -15,6 +20,15 @@ MediaItemRepo::~MediaItemRepo() {
     for (size_t i = 0; i < items.size(); i++) {
         delete items[i];
     }
+}
+
+void MediaItemRepo::remove(MediaItem *item) {
+    auto iterator = std::find_if(items.begin(), items.end(), [item](MediaItem *value) -> bool {
+        return value->getTitle() == item->getTitle();
+    });
+
+    if (iterator == items.end()) throw std::invalid_argument("MediaItem not found: " + item->getTitle());
+    items.erase(iterator);
 }
 
 bool FileRepo::load() {
