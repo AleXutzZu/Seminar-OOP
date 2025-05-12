@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(program main.cpp domain/MediaItem.cpp repo/MediaItemRepo.cpp
         service/MediaItemService.cpp
-        service/MediaItemService.h)
+        service/MediaItemService.h
+        ui/UserInterface.cpp
+        ui/UserInterface.h)
