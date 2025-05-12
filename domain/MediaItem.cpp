@@ -20,5 +20,17 @@ const std::string &MediaItem::getUrl() const {
 
 Song::Song(std::string title, int duration, std::string url, std::string artist) :MediaItem(title, duration, url), artist(artist) {}
 
+const std::string &Song::getArtist() const {
+    return artist;
+}
+
 Movie::Movie(std::string title, int duration, std::string url, std::string director, int numberOfActors) : MediaItem(title, duration, url), director(director), numberOfActors(numberOfActors) {}
+
+const std::string &Movie::getDirector() const {
+    return director;
+}
+
+int Movie::getNumberOfActors() const {
+    return numberOfActors;
+}
 

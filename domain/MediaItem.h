@@ -39,6 +39,8 @@ public:
     std::string toString() const override{
         return "Song"+','+MediaItem::toString()+','+artist+",NA,NA";
     }
+
+    const std::string &getArtist() const;
 };
 
 class Movie : public MediaItem {
@@ -46,6 +48,10 @@ private:
     std::string director;
     int numberOfActors;
 public:
+    const std::string &getDirector() const;
+
+    int getNumberOfActors() const;
+
     Movie(std::string title, int duration, std::string url, std::string director, int numberOfActors);
     std::string toString() const override {
         return "Movie"+','+MediaItem::toString()+",NA,"+std::to_string(numberOfActors)+','+director;
