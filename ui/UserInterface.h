@@ -6,33 +6,36 @@
 #define SEMINAR_OOP_USERINTERFACE_H
 
 #include "../service/MediaItemService.h"
-#include <iostream>
-#include <numeric>
+#include <QWidget>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QComboBox>
+#include <QTableWidget>
 
-class UserInterface {
+class UserInterface : public QWidget {
+Q_OBJECT
 private:
     MediaItemService &service;
 
+    QPushButton *addButton;
+    QPushButton *removeButton;
+    QPushButton *sortButton;
+    QLineEdit *title;
+    QLineEdit *duration;
+    QLineEdit *url;
+    QLineEdit *artist;
+    QLineEdit *director;
+    QLineEdit *numberOfActors;
+    QComboBox *type;
+    QTableWidget *table;
+
+    void initUI();
+
 public:
-    UserInterface(MediaItemService &srv);
-
-    template<typename T>
-    T parseInput(const std::string &input);
+    explicit UserInterface(MediaItemService &srv, QWidget *parent = nullptr);
+    public slots:
+    void addItem();
 };
-
-template<typename T>
-T UserInterface::parseInput(const std::string &input) {
-    T result;
-    while (true) {
-        std::cout << input << '\n';
-        std::cin >> result;
-        if (std::cin.good()) break;
-        std::cout << "Your input is invalid!\n";
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max());
-        std::cin.clear();
-    }
-    return result;
-}
 
 
 #endif //SEMINAR_OOP_USERINTERFACE_H
