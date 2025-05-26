@@ -9,15 +9,17 @@
 #include "../domain/MediaItem.h"
 #include <vector>
 #include <fstream>
+#include <memory>
 
 class MediaItemRepo {
 protected:
-    std::vector<MediaItem *> items;
+    std::vector<std::shared_ptr<MediaItem>> items;
 public:
-    void add(MediaItem *);
-    MediaItem* remove(std::string title);
+    void add(const std::shared_ptr<MediaItem> &);
 
-    virtual ~MediaItemRepo();
+    std::shared_ptr<MediaItem> remove(std::string title);
+
+    virtual ~MediaItemRepo() = default;
 
     MediaItemRepo &operator=(const MediaItemRepo &other) = delete;
 
@@ -25,7 +27,7 @@ public:
 
     MediaItemRepo() = default;
 
-    const std::vector<MediaItem *> &getItems() const;
+    const std::vector<std::shared_ptr<MediaItem>> &getItems() const;
 };
 
 class FileRepo : public MediaItemRepo {
@@ -45,7 +47,7 @@ public:
             return false;
         }
         of << "type, title, duration, url, artist, director, numberOfActors";
-        for (MediaItem *i: items) {
+        for (const auto &i: items) {
             of << *i << '\n';
         }
         return true;

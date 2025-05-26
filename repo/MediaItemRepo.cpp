@@ -7,34 +7,30 @@
 #include <iostream>
 #include <algorithm>
 
-void MediaItemRepo::add(MediaItem *item) {
-    auto iterator = std::find_if(items.begin(), items.end(), [item](MediaItem *value) -> bool {
-        return value->getTitle() == item->getTitle();
-    });
+void MediaItemRepo::add(const std::shared_ptr<MediaItem> &item) {
+    auto iterator = std::find_if(items.begin(), items.end(),
+                                 [item](const std::shared_ptr<MediaItem> &value) -> bool {
+                                     return value->getTitle() == item->getTitle();
+                                 });
     if (iterator != items.end()) throw std::invalid_argument("MediaItem already exists: " + item->getTitle());
     items.push_back(item);
 }
 
 
-MediaItemRepo::~MediaItemRepo() {
-    for (size_t i = 0; i < items.size(); i++) {
-        delete items[i];
-    }
-}
-
-MediaItem* MediaItemRepo::remove(std::string title) {
-    auto iterator = std::find_if(items.begin(), items.end(), [title](MediaItem *value) -> bool {
-        return value->getTitle() == title;
-    });
+std::shared_ptr<MediaItem> MediaItemRepo::remove(std::string title) {
+    auto iterator = std::find_if(items.begin(), items.end(),
+                                 [title](const std::shared_ptr<MediaItem> &value) -> bool {
+                                     return value->getTitle() == title;
+                                 });
 
     if (iterator == items.end()) throw std::invalid_argument("MediaItem not found: " + title);
 
-    MediaItem *ptr = *iterator;
+    std::shared_ptr<MediaItem> ptr = *iterator;
     items.erase(iterator);
     return ptr;
 }
 
-const std::vector<MediaItem *> &MediaItemRepo::getItems() const {
+const std::vector<std::shared_ptr<MediaItem>> &MediaItemRepo::getItems() const {
     return items;
 }
 
@@ -54,12 +50,12 @@ bool FileRepo::load() {
         else {
             if (tokens[0] == "Song") {
                 Song *song = new Song(tokens[1], computeDuration(tokens[2]), tokens[3], tokens[4]);
-                items.push_back(song);
+                items.push_back(std::shared_ptr<Song>(song));
                 std::cout << "Created song!" << '\n';
             } else {
-                Movie *movie = new Movie(tokens[1], computeDuration(tokens[2]),
-                                         tokens[3], tokens[5],
-                                         std::stoi(tokens[6]));
+                auto movie = std::make_shared<Movie>(tokens[1], computeDuration(tokens[2]),
+                                                     tokens[3], tokens[5],
+                                                     std::stoi(tokens[6]));
                 items.push_back(movie);
                 std::cout << "Created movie!" << '\n';
             }
