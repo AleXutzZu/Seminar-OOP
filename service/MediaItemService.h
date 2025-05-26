@@ -13,7 +13,7 @@ class UndoAction;
 class MediaItemService {
 private:
     MediaItemRepo &repository;
-    std::stack<UndoAction *> operations;
+    std::stack<std::unique_ptr<UndoAction>> operations;
 public:
     MediaItemService(MediaItemRepo &repo);
 
@@ -25,40 +25,40 @@ public:
 
     void addMovie(std::string title, int duration, std::string url, std::string director, int numberOfActors);
 
-    const std::vector<MediaItem *> &getAllMediaItems() const;
+    const std::vector<std::shared_ptr<MediaItem>> &getAllMediaItems() const;
 
-    std::vector<MediaItem *> getAllSortedByArtist() const;
+    std::vector<std::shared_ptr<MediaItem>> getAllSortedByArtist() const;
 
-    std::vector<MediaItem *> getAllSortedByDuration() const;
+    std::vector<std::shared_ptr<MediaItem>> getAllSortedByDuration() const;
 
     void remove(std::string title);
 
     void undo();
 
-    ~MediaItemService();
+    ~MediaItemService() = default;
 };
 
 
 class UndoAction {
 protected:
-    MediaItem *item;
+    std::shared_ptr<MediaItem> item;
     MediaItemRepo &repository;
 
 public:
-    UndoAction(MediaItem *item, MediaItemRepo &repo) : repository(repo), item(item) {}
+    UndoAction(std::shared_ptr<MediaItem> item, MediaItemRepo &repo) : repository(repo), item(item) {}
 
     virtual void executeUndo() = 0;
 
     virtual ~UndoAction() = default;
 
-    MediaItem *getItem() const {
+    const std::shared_ptr<MediaItem> &getItem() const {
         return item;
     }
 };
 
 class UndoAdd : public UndoAction {
 public:
-    UndoAdd(MediaItem *item, MediaItemRepo &repo) : UndoAction(item, repo) {}
+    UndoAdd(std::shared_ptr<MediaItem> item, MediaItemRepo &repo) : UndoAction(item, repo) {}
 
     void executeUndo() override {
         repository.remove(item->getTitle());
@@ -67,7 +67,7 @@ public:
 
 class UndoRemove : public UndoAction {
 public:
-    UndoRemove(MediaItem *item, MediaItemRepo &repo) : UndoAction(item, repo) {}
+    UndoRemove(std::shared_ptr<MediaItem> item, MediaItemRepo &repo) : UndoAction(item, repo) {}
 
     void executeUndo() override {
         repository.add(item);
